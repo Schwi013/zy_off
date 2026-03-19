@@ -1,0 +1,30 @@
+services:
+  # ----------------------------------------
+  # CAJA 1: BASE DE DATOS PRINCIPAL (POSTGRES)
+  # ----------------------------------------
+  db-postgres:
+    image: postgres:15-alpine
+    container_name: zy_off_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: superpassword123
+      POSTGRES_DB: zy_off_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # ----------------------------------------
+  # CAJA 2: CACHÉ VOLÁTIL (REDIS)
+  # ----------------------------------------
+  cache-redis:
+    image: redis:7-alpine
+    container_name: zy_off_redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+# Declaración del "disco duro externo" para que no se borren tus datos
+volumes:
+  postgres_data:
