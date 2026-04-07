@@ -1,0 +1,4 @@
+@import "tailwindcss";
+html {
+  font-size: 20px; /* El estándar es 16px. Al poner 18px, todo crece un 12% */
+}
