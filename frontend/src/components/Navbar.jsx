@@ -16,25 +16,25 @@ const Navbar = ({ onOpenAuth }) => {
         </div>
 
         {/* ENLACES usando <Link> */}
-        <div className="hidden md:flex items-center justify-center gap-14 text-sm font-bold uppercase tracking-widest text-gray-900">
-          <Link to="/mujer" className="hover:text-gray-400 transition-all">Mujer</Link>
-          <Link to="/hombres" className="hover:text-gray-400 transition-all">Hombre</Link>
-          <Link to="/ninos" className="hover:text-gray-400 transition-all">Niños</Link>
+        <div className="hidden md:flex items-center justify-center gap-22.5 text-md font-bold uppercase tracking-widest text-gray-900">
+          <Link to="/mujer" className="hover:text-gray-500 transition-all">Mujer</Link>
+          <Link to="/hombres" className="hover:text-gray-500 transition-all">Hombre</Link>
+          <Link to="/ninos" className="hover:text-gray-500 transition-all">Niños</Link>
           <Link to="/destacados" className="text-red-600 border-b-2 border-red-600 pb-1 hover:text-red-500 transition-all">Destacados</Link>
         </div>
 
         {/* ICONOS */}
         <div className="flex-1 flex items-center justify-end gap-7 text-gray-800">
-          <Search size={28} className="cursor-pointer hover:scale-110 transition-transform" />
-          <Heart size={28} className="cursor-pointer hover:scale-110 transition-transform" />
+          <Search size={40} className="cursor-pointer hover:scale-110 transition-transform" />
+          <Heart size={40} className="cursor-pointer hover:scale-110 transition-transform" />
           <div className="relative cursor-pointer group">
-            <ShoppingBag size={28} className="group-hover:scale-110 transition-transform" />
+            <ShoppingBag size={40} className="group-hover:scale-110 transition-transform" />
             <span className="absolute -top-1.5 -right-1.5 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-black">
               0
             </span>
           </div>
           <User 
-            size={28} 
+            size={40} 
             className="cursor-pointer hover:scale-110 transition-transform" 
             onClick={onOpenAuth} 
           />
