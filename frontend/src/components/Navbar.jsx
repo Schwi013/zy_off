@@ -16,7 +16,7 @@ const Navbar = ({ onOpenAuth }) => {
             <img 
               src={LogoZoff} 
               alt="Logo Z-OFF" 
-              className="w-24 md:w-32 object-contain" // <--- Logo más pequeño en móvil, grande en desktop
+              className="w-19 md:w-28 object-contain" // <--- Logo más pequeño en móvil, grande en desktop
             />
           </div>
         </div>

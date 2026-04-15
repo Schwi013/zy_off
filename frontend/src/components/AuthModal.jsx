@@ -56,7 +56,7 @@ const AuthModal = ({ isOpen, onClose }) => {
               />
               <input 
                 type="text" 
-                placeholder="Usuario" 
+                placeholder="Apellidos" 
                 className="w-full border-b border-gray-300 py-2 outline-none focus:border-red-600 transition-colors text-sm"
               />
             </>
