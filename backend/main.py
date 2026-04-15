@@ -8,13 +8,22 @@ import models as models
 import schemas as schemas
 from security import verify_password, create_access_token, verify_token, get_password_hash
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.middleware.cors import CORSMiddleware
 
 
 Base.metadata.create_all(bind=engine)
-app = FastAPI(title="ZY OFF API")
 redis_client = redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
-
 validacion_token = HTTPBearer()
+
+app = FastAPI(title="ZY OFF API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 def get_db():
     db = SessionLocal()
