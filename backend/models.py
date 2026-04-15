@@ -57,7 +57,7 @@ class Address(Base):
     country = Column(String(50), nullable=False)
     tel = Column(String(20), nullable=False)
     is_default = Column(Boolean, default=False, nullable=False)
-    is_active = Column(Boolean, default=True, nullable=False) # Borrado Lógico
+    is_active = Column(Boolean, default=True, nullable=False) 
 
 # ==========================================
 # 5. TABLA: products (Modelo General)
@@ -127,7 +127,6 @@ class Order(Base):
     total = Column(Numeric(10, 2), nullable=False)
     status = Column(String(20), default="PENDING", nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    email = Column(String(100), nullable=False)
     stripe_payment_intent_id = Column(String(255), nullable=True)
 
     __table_args__ = (

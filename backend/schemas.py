@@ -9,8 +9,12 @@ class UserCreate(BaseModel):
     email: str
     password: str
 
+class EsquemaBase(BaseModel):
+    class Config:
+        from_attributes = True
+
 # Modelo de salida: lo que el backend responde
-class UserResponse(BaseModel):
+class UserResponse(EsquemaBase):
     id_user: UUID
     name: str
     last_name: str
@@ -19,5 +23,13 @@ class UserResponse(BaseModel):
     is_verified: bool
     created_at: datetime
 
-class Config:
-    from_attributes = True
+
+class ProductResponse(EsquemaBase):
+    id_product: int
+    name_product: str
+    base_price: float
+    gender: str
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
