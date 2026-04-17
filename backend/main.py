@@ -56,8 +56,13 @@ def ruta_principal():
 
 @app.post("/usuarios", response_model=schemas.UserResponse)
 def crear_usuario(usuario: schemas.UserCreate, db: Session = Depends(get_db)):
-    contrasena_encriptada = get_password_hash(usuario.password)
+    usuario_existente = db.query(models.User).filter(models.User.email == usuario.email).first()
 
+    if usuario_existente:
+        raise HTTPException(status_code=400, detail="El correo electronico ya esta en uso")
+
+    contrasena_encriptada = get_password_hash(usuario.password)
+    
     db_user = models.User(
         name = usuario.name,
         last_name = usuario.last_name,

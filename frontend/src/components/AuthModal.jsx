@@ -3,7 +3,6 @@ import { X } from 'lucide-react';
 import LogoZoff from '../assets/logo.png';
 
 const AuthModal = ({ isOpen, onClose }) => {
-
   const [isLogin, setIsLogin] = useState(true);
   
   const [formData, setFormData] = useState({
@@ -13,7 +12,6 @@ const AuthModal = ({ isOpen, onClose }) => {
     password: ''
   });
 
-  // El return temprano va debajo de los Hooks
   if (!isOpen) return null;
 
   const handleChange = (e) => {
@@ -23,8 +21,9 @@ const AuthModal = ({ isOpen, onClose }) => {
     });
   };
 
+  // Esta función habla con tu FastAPI
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault(); // Evita que la página recargue
     const endpoint = isLogin ? "/login" : "/usuarios";
     
     try {
@@ -38,15 +37,19 @@ const AuthModal = ({ isOpen, onClose }) => {
 
       if (response.ok) {
         if (isLogin) {
+          // Si el login es correcto, guardamos el gafete (Token)
           localStorage.setItem('token', data.access_token);
           alert("¡Login Exitoso! Bienvenido a ZY OFF");
-          onClose(); 
+          onClose(); // Cerramos la ventana
         } else {
+          // Si el registro es correcto
           alert("¡Cuenta creada exitosamente! Por favor inicia sesión.");
-          setIsLogin(true); 
+          setIsLogin(true); // Cambiamos a la pestaña de login
+          // Limpiamos el formulario
           setFormData({ name: '', last_name: '', email: '', password: '' });
         }
       } else {
+        // Si pusiste mal la contraseña o el usuario ya existe
         alert(data.detail || "Error en la operación");
       }
     } catch (error) {
@@ -56,7 +59,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-1">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
       <div className="bg-white w-full max-w-md rounded-3xl p-8 relative shadow-2xl">
         
         <button onClick={onClose} className="absolute top-6 right-6 text-gray-400 hover:text-black transition-colors">
@@ -91,6 +94,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           
           {!isLogin && (
             <>
+              {/* Nota cómo conectamos el name, el value y el onChange */}
               <input 
                 type="text" 
                 name="name"
