@@ -71,11 +71,11 @@ function App() {
 
         {/* Definición de Rutas: Aquí decides qué se muestra según la URL */}
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/hombres" element={<Hombres />} />
-          <Route path="/destacados" element={<Destacados />} />
-          <Route path="/mujer" element={<Mujeres />} />
-          <Route path="/ninos" element={<Niños />} />
+          <Route path="/" element={<HomePage/>} />
+          <Route path="/hombres" element={<Hombres/>} />
+          <Route path="/destacados" element={<Destacados/>} />
+          <Route path="/mujer" element={<Mujeres/>} />
+          <Route path="/ninos" element={<Niños/>} />
         </Routes>
 
         <footer className="bg-white border-t border-gray-200 py-12 mt-20">

@@ -19,43 +19,43 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const endpoint = isLogin ? "/login" : "/usuarios";
-    // ... (misma lógica de fetch que ya tienes)
+    // Tu lógica de fetch aquí...
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-      {/* Reducido a 320px de ancho máximo (xs) */}
-      <div className="bg-white w-full max-w-[320px] rounded-2xl p-5 relative shadow-2xl">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-8}">
+      {/* 1. Ancho equilibrado a 400px y más redondeado */}
+      <div className="bg-white w-full max-w-[600px] rounded-3xl p-10 relative shadow-2xl">
         
-        <button onClick={onClose} className="absolute top-3 right-3 text-gray-400 hover:text-black transition-colors">
-          <X size={18} />
+        <button onClick={onClose} className="absolute top-6 right-6 text-gray-400 hover:text-black transition-colors">
+          <X size={22} />
         </button>
 
-        <div className="flex justify-center mb-3">
-          <img src={LogoZoff} alt="Z-OFF Logo" className="h-12 object-contain" />
+        {/* 2. Logo con mejor presencia */}
+        <div className="flex justify-center mb-8">
+          <img src={LogoZoff} alt="Z-OFF Logo" className="h-16 object-contain" />
         </div>
 
-        {/* Selector más pequeño */}
-        <div className="flex bg-gray-100 rounded-full p-1 mb-4">
+        {/* 3. Selector de pestañas con mejor tamaño */}
+        <div className="flex bg-gray-100 rounded-full p-1.5 mb-8">
           <button 
             onClick={() => setIsLogin(true)}
-            className={`flex-1 py-1 rounded-full text-[10px] font-bold transition-all ${isLogin ? 'bg-red-600 text-white shadow-sm' : 'text-gray-500'}`}
+            className={`flex-1 py-1.5 rounded-full text-xs font-black transition-all duration-300 ${isLogin ? 'bg-red-600 text-white shadow-md' : 'text-gray-500 hover:text-gray-700'}`}
           >
-            LOGIN
+            INICIAR SESIÓN
           </button>
           <button 
             onClick={() => setIsLogin(false)}
-            className={`flex-1 py-1 rounded-full text-[10px] font-bold transition-all ${!isLogin ? 'bg-red-600 text-white shadow-sm' : 'text-gray-500'}`}
+            className={`flex-1 py-2.5 rounded-full text-xs font-black transition-all duration-300 ${!isLogin ? 'bg-red-600 text-white shadow-md' : 'text-gray-500 hover:text-gray-700'}`}
           >
-            REGISTRO
+            REGISTRARSE
           </button>
         </div>
 
-        <form className="space-y-3" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit}>
           
           {!isLogin && (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-4">
               <input 
                 type="text" 
                 name="name"
@@ -63,7 +63,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                 onChange={handleChange}
                 placeholder="Nombre" 
                 required
-                className="w-full border-b border-gray-200 py-1 outline-none focus:border-red-600 transition-colors text-xs"
+                className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-red-600 transition-colors text-sm"
               />
               <input 
                 type="text" 
@@ -72,7 +72,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                 onChange={handleChange}
                 placeholder="Apellidos" 
                 required
-                className="w-full border-b border-gray-200 py-1 outline-none focus:border-red-600 transition-colors text-xs"
+                className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-red-600 transition-colors text-sm"
               />
             </div>
           )}
@@ -84,7 +84,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             onChange={handleChange}
             placeholder="E-mail" 
             required
-            className="w-full border-b border-gray-200 py-1 outline-none focus:border-red-600 transition-colors text-xs"
+            className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-red-600 transition-colors text-sm"
           />
           <input 
             type="password" 
@@ -93,16 +93,17 @@ const AuthModal = ({ isOpen, onClose }) => {
             onChange={handleChange}
             placeholder="Contraseña" 
             required
-            className="w-full border-b border-gray-200 py-1 outline-none focus:border-red-600 transition-colors text-xs"
+            className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-red-600 transition-colors text-sm"
           />
 
-          <button type="submit" className="w-full bg-red-600 text-white py-2.5 rounded-lg font-bold uppercase text-[10px] tracking-widest hover:bg-red-700 transition-all mt-2">
-            {isLogin ? 'Entrar' : 'Registrarme'}
+          {/* 4. Botón con más "punch" */}
+          <button type="submit" className="w-full bg-red-600 text-white py-4 rounded-xl font-black uppercase text-xs tracking-[0.2em] hover:bg-black transition-all duration-300 mt-4 shadow-lg shadow-red-200">
+            {isLogin ? 'Entrar' : 'Crear Cuenta'}
           </button>
 
           {isLogin && (
-            <p className="text-center mt-1">
-              <a href="#" className="text-[8px] font-bold uppercase text-gray-400 hover:text-black">
+            <p className="text-center">
+              <a href="#" className="text-[10px] font-black uppercase text-gray-400 hover:text-red-600 transition-colors">
                 ¿Olvidaste tu contraseña?
               </a>
             </p>
