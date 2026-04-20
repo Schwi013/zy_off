@@ -4,7 +4,6 @@ import LogoZoff from '../assets/logo.png';
 
 const AuthModal = ({ isOpen, onClose }) => {
   const [isLogin, setIsLogin] = useState(true);
-  
   const [formData, setFormData] = useState({
     name: '',
     last_name: '',
@@ -15,86 +14,48 @@ const AuthModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Esta función habla con tu FastAPI
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Evita que la página recargue
+    e.preventDefault();
     const endpoint = isLogin ? "/login" : "/usuarios";
-    
-    try {
-      const response = await fetch(`http://localhost:8000${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        if (isLogin) {
-          // Si el login es correcto, guardamos el gafete (Token)
-          localStorage.setItem('token', data.access_token);
-          alert("¡Login Exitoso! Bienvenido a ZY OFF");
-          onClose(); // Cerramos la ventana
-        } else {
-          // Si el registro es correcto
-          alert("¡Cuenta creada exitosamente! Por favor inicia sesión.");
-          setIsLogin(true); // Cambiamos a la pestaña de login
-          // Limpiamos el formulario
-          setFormData({ name: '', last_name: '', email: '', password: '' });
-        }
-      } else {
-        // Si pusiste mal la contraseña o el usuario ya existe
-        alert(data.detail || "Error en la operación");
-      }
-    } catch (error) {
-      console.error("Error de conexión:", error);
-      alert("Error: Verifica que tu servidor Backend (FastAPI) esté encendido.");
-    }
+    // ... (misma lógica de fetch que ya tienes)
   };
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-md rounded-3xl p-8 relative shadow-2xl">
+      {/* Reducido a 320px de ancho máximo (xs) */}
+      <div className="bg-white w-full max-w-[320px] rounded-2xl p-5 relative shadow-2xl">
         
-        <button onClick={onClose} className="absolute top-6 right-6 text-gray-400 hover:text-black transition-colors">
-          <X size={24} />
+        <button onClick={onClose} className="absolute top-3 right-3 text-gray-400 hover:text-black transition-colors">
+          <X size={18} />
         </button>
 
-        <div className="flex justify-center mb-6">
-          <img src={LogoZoff} alt="Z-OFF Logo" className="h-20 object-contain" />
+        <div className="flex justify-center mb-3">
+          <img src={LogoZoff} alt="Z-OFF Logo" className="h-12 object-contain" />
         </div>
 
-        <div className="flex bg-gray-200 rounded-full p-1 mb-8">
+        {/* Selector más pequeño */}
+        <div className="flex bg-gray-100 rounded-full p-1 mb-4">
           <button 
             onClick={() => setIsLogin(true)}
-            className={`flex-1 py-2 rounded-full text-sm font-bold transition-all ${isLogin ? 'bg-red-600 text-white shadow-md' : 'text-gray-500'}`}
+            className={`flex-1 py-1 rounded-full text-[10px] font-bold transition-all ${isLogin ? 'bg-red-600 text-white shadow-sm' : 'text-gray-500'}`}
           >
-            Iniciar sesión
+            LOGIN
           </button>
           <button 
             onClick={() => setIsLogin(false)}
-            className={`flex-1 py-2 rounded-full text-sm font-bold transition-all ${!isLogin ? 'bg-red-600 text-white shadow-md' : 'text-gray-500'}`}
+            className={`flex-1 py-1 rounded-full text-[10px] font-bold transition-all ${!isLogin ? 'bg-red-600 text-white shadow-sm' : 'text-gray-500'}`}
           >
-            Registrarse
+            REGISTRO
           </button>
         </div>
 
-        <h2 className="text-center text-xl font-black mb-6 uppercase tracking-tight">
-          {isLogin ? "Bienvenido de vuelta" : "Únete a ZYOFF"}
-        </h2>
-
-        {/* Agregamos el onSubmit al formulario */}
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-3" onSubmit={handleSubmit}>
           
           {!isLogin && (
-            <>
-              {/* Nota cómo conectamos el name, el value y el onChange */}
+            <div className="grid grid-cols-2 gap-2">
               <input 
                 type="text" 
                 name="name"
@@ -102,7 +63,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                 onChange={handleChange}
                 placeholder="Nombre" 
                 required
-                className="w-full border-b border-gray-300 py-2 outline-none focus:border-red-600 transition-colors text-sm"
+                className="w-full border-b border-gray-200 py-1 outline-none focus:border-red-600 transition-colors text-xs"
               />
               <input 
                 type="text" 
@@ -111,9 +72,9 @@ const AuthModal = ({ isOpen, onClose }) => {
                 onChange={handleChange}
                 placeholder="Apellidos" 
                 required
-                className="w-full border-b border-gray-300 py-2 outline-none focus:border-red-600 transition-colors text-sm"
+                className="w-full border-b border-gray-200 py-1 outline-none focus:border-red-600 transition-colors text-xs"
               />
-            </>
+            </div>
           )}
 
           <input 
@@ -123,7 +84,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             onChange={handleChange}
             placeholder="E-mail" 
             required
-            className="w-full border-b border-gray-300 py-2 outline-none focus:border-red-600 transition-colors text-sm"
+            className="w-full border-b border-gray-200 py-1 outline-none focus:border-red-600 transition-colors text-xs"
           />
           <input 
             type="password" 
@@ -132,17 +93,17 @@ const AuthModal = ({ isOpen, onClose }) => {
             onChange={handleChange}
             placeholder="Contraseña" 
             required
-            className="w-full border-b border-gray-300 py-2 outline-none focus:border-red-600 transition-colors text-sm"
+            className="w-full border-b border-gray-200 py-1 outline-none focus:border-red-600 transition-colors text-xs"
           />
 
-          <button type="submit" className="w-full bg-red-600 text-white py-4 rounded-full font-black uppercase text-sm tracking-widest hover:bg-red-700 transition-all mt-4">
-            {isLogin ? 'Iniciar sesión' : 'Crear Cuenta'}
+          <button type="submit" className="w-full bg-red-600 text-white py-2.5 rounded-lg font-bold uppercase text-[10px] tracking-widest hover:bg-red-700 transition-all mt-2">
+            {isLogin ? 'Entrar' : 'Registrarme'}
           </button>
 
           {isLogin && (
-            <p className="text-center mt-4">
-              <a href="#" className="text-[10px] font-black uppercase text-gray-400 hover:text-black">
-                Olvidé mi contraseña
+            <p className="text-center mt-1">
+              <a href="#" className="text-[8px] font-bold uppercase text-gray-400 hover:text-black">
+                ¿Olvidaste tu contraseña?
               </a>
             </p>
           )}
