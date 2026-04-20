@@ -4,10 +4,10 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProductCard from './components/ProductCard';
 import AuthModal from './components/AuthModal';
-import Hombres from './pages/hombres'; 
-import Destacados from './pages/destacados'; 
-import Mujeres from './pages/mujeres';
-import Niños from './pages/niños';
+import Hombres from './pages/Hombres'; 
+import Destacados from './pages/Destacados'; 
+import Mujeres from './pages/Mujeres';
+import Niños from './pages/Niños';
 
 
 function App() {
