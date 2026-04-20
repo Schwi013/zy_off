@@ -1,4 +1,18 @@
 @import "tailwindcss";
+
+
 html {
-  font-size: 26px; /* El estándar es 16px. Al poner 18px, todo crece un 12% */
+  font-size: 16px; 
+}
+
+@media (min-width: 1536px) {
+  html {
+    font-size: 22px; 
+  }
+}
+
+@media (min-width: 2560px) {
+  html {
+    font-size: 26px; 
+  }
 }

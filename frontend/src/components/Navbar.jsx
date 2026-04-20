@@ -6,18 +6,17 @@ import { Search, ShoppingBag, Heart, User, Menu, LogOut, ChevronRight } from 'lu
 const Navbar = ({ onOpenAuth }) => {
   const [activeMenu, setActiveMenu] = useState(null);
   
-  // === ESTADOS DE AUTENTICACIÓN Y DATOS DEL USUARIO ===
+  // === ESTADOS ===
   const [isLogged, setIsLogged] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [userName, setUserName] = useState(''); // Nuevo estado para el nombre
+  const [showSearch, setShowSearch] = useState(false); // Estado del buscador
+  const [userName, setUserName] = useState(''); 
 
-  // 1. Vigía del Token y Carga de Perfil
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem('token');
       if (token) {
         setIsLogged(true);
-        // Si no tenemos el nombre todavía, lo pedimos al Backend
         if (!userName) {
           try {
             const response = await fetch('http://localhost:8000/perfil', {
@@ -25,9 +24,8 @@ const Navbar = ({ onOpenAuth }) => {
             });
             if (response.ok) {
               const data = await response.json();
-              setUserName(data.name); // Guardamos el nombre real
+              setUserName(data.name); 
             } else {
-              // Si el token falló, limpiamos
               localStorage.removeItem('token');
               setIsLogged(false);
             }
@@ -41,12 +39,13 @@ const Navbar = ({ onOpenAuth }) => {
       }
     };
 
-    // Revisión periódica simple
     const interval = setInterval(fetchUserData, 1000);
     return () => clearInterval(interval);
   }, [userName]);
 
+  // Manejador del ícono de usuario
   const handleUserClick = () => {
+    setShowSearch(false);
     if (isLogged) {
       setShowUserMenu(!showUserMenu);
     } else {
@@ -71,61 +70,100 @@ const Navbar = ({ onOpenAuth }) => {
     <nav 
       className="border-b border-gray-200 sticky top-0 bg-white z-50 font-sans shadow-sm relative"
       onMouseLeave={() => {
+        // Si el usuario saca el mouse de la Navbar por completo, cerramos todo
         setActiveMenu(null);
         setShowUserMenu(false);
+        setShowSearch(false);
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-10 h-16 lg:h-15 flex items-center justify-between">
+      {/* ALTURA AJUSTADA A 60px (Aprox h-15) */}
+      <div className="max-w-7xl mx-auto px-6 md:px-10 h-[80px] flex items-center justify-between">
         
         {/* LOGO */}
         <div className="flex-none flex items-center">
-          <Link to="/" className="cursor-pointer" onClick={() => setActiveMenu(null)}>
+          <Link to="/" className="cursor-pointer" onClick={() => { setActiveMenu(null); setShowSearch(false); }}>
             <img src={LogoZoff} alt="Logo Z-OFF" className="w-19 md:w-24 object-contain" />
           </Link>
         </div>
 
-        {/* ENLACES CENTRALES */}
-        <div className="hidden md:flex flex-1 items-center justify-center gap-8 lg:gap-10 text-[10px] lg:text-sm font-black uppercase tracking-widest text-gray-900 h-full">
-          {['mujer', 'hombres', 'ninos'].map((ruta) => (
-            <div 
-              key={ruta}
-              className="h-full flex items-center"
-              onMouseEnter={() => {
-                setActiveMenu(ruta);
-                setShowUserMenu(false);
+        {/* SECCIÓN CENTRAL DINÁMICA (ENLACES O BUSCADOR) */}
+        <div className="hidden md:flex flex-1 items-center justify-center h-full relative px-10">
+          
+          {showSearch ? (
+            /* === MODO BUSCADOR === */
+            <form 
+              className="w-full max-w-2xl relative flex items-center animate-fade-in"
+              onSubmit={(e) => {
+                e.preventDefault();
+                alert(`Buscando: ${e.target.search.value}`);
+                setShowSearch(false);
               }}
             >
-              <Link to={`/${ruta}`} className="hover:text-red-600 transition-colors h-full flex items-center">
-                {ruta === 'ninos' ? 'Niños' : ruta}
+              <Search size={20} className="absolute left-4 text-gray-400" />
+              <input 
+                type="text" 
+                name="search"
+                placeholder="Busca por marca, modelo o color..." 
+                className="w-full bg-gray-100 text-gray-900 rounded-full py-2.5 pl-12 pr-6 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-600 transition-all placeholder:font-medium"
+                autoFocus // El teclado se pone aquí mágicamente
+              />
+            </form>
+          ) : (
+            /* === MODO NAVEGACIÓN NORMAL === */
+            <div className="flex gap-8 lg:gap-10 text-[10px] lg:text-sm font-black uppercase tracking-widest text-gray-900 h-full">
+              {['mujer', 'hombres', 'ninos'].map((ruta) => (
+                <div 
+                  key={ruta}
+                  className="h-full flex items-center"
+                  onMouseEnter={() => {
+                    setActiveMenu(ruta);
+                    setShowUserMenu(false);
+                  }}
+                >
+                  <Link to={`/${ruta}`} className="hover:text-red-600 transition-colors h-full flex items-center">
+                    {ruta === 'ninos' ? 'Niños' : ruta}
+                  </Link>
+                </div>
+              ))}
+
+              <Link 
+                to="/destacados" 
+                className="text-red-600 border-b-2 border-red-600 hover:text-red-500 transition-all flex items-center h-full"
+                onMouseEnter={() => setActiveMenu(null)} 
+              >
+                Destacados
               </Link>
             </div>
-          ))}
-
-          <Link 
-            to="/destacados" 
-            className="text-red-600 border-b-2 border-red-600 hover:text-red-500 transition-all flex items-center h-full"
-            onMouseEnter={() => {
-              setActiveMenu(null);
-              setShowUserMenu(false);
-            }} 
-          >
-            Destacados
-          </Link>
+          )}
         </div>
 
-        {/* ICONOS DERECHA */}
+        {/* ICONOS DERECHA (TAMAÑO 35) */}
         <div className="flex-none flex items-center justify-end gap-4 md:gap-7 text-gray-800">
-          <Search size={35} className="cursor-pointer hover:scale-110 transition-transform" />
+          
+          {/* LUPA: Con onMouseEnter activa el buscador central */}
+          <button 
+            onMouseEnter={() => { 
+              setShowSearch(true); 
+              setActiveMenu(null); 
+              setShowUserMenu(false); 
+            }} 
+            className="focus:outline-none flex items-center"
+          >
+            <Search 
+              size={35} 
+              className={`cursor-pointer hover:scale-110 transition-transform ${showSearch ? 'text-red-600' : 'text-gray-800'}`} 
+            />
+          </button>
+          
           <Heart size={35} className="cursor-pointer hover:scale-110 transition-transform" />
           
           <div className="relative cursor-pointer group">
             <ShoppingBag size={35} className="group-hover:scale-110 transition-transform" />
-            <span className="absolute -top-1 -right-1 bg-black text-white text-[8px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-black">
+            <span className="absolute -top-1 -right-1 bg-black text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-black">
               0
             </span>
           </div>
 
-          {/* 3. ÍCONO DE USUARIO: Siempre negro, sin importar el login */}
           <div className="relative">
             <User 
               size={40} 
@@ -133,13 +171,10 @@ const Navbar = ({ onOpenAuth }) => {
               onClick={handleUserClick} 
             />
 
-            {/* MINI MENÚ DESPLEGABLE */}
             {isLogged && showUserMenu && (
               <div className="absolute right-0 mt-6 w-56 bg-white border border-gray-100 shadow-2xl rounded-2xl overflow-hidden z-50 flex flex-col">
-                
                 <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50">
                   <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Cuenta oficial</p>
-                  {/* 4. NOMBRE DINÁMICO DESDE EL BACKEND */}
                   <p className="text-sm font-black text-gray-900 mt-1 truncate">
                     Hola, {userName || 'Cargando...'}
                   </p>
@@ -172,8 +207,8 @@ const Navbar = ({ onOpenAuth }) => {
       </div>
 
       {/* PANEL DESPLEGABLE (MEGA MENÚ) */}
-      {activeMenu && (
-        <div className="absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-xl transition-all duration-300 z-40">
+      {activeMenu && !showSearch && (
+        <div className="absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-xl transition-all duration-300 z-30">
           <div className="max-w-7xl mx-auto px-10 py-8">
             <h3 className="text-[10px] font-black uppercase tracking-widest mb-6 text-gray-400">
               Categorías {activeMenu === 'ninos' ? 'Infantiles' : 'de ' + activeMenu}
