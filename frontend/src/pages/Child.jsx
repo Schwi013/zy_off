@@ -1,7 +1,7 @@
 import React from 'react';
 import ProductCard from '../components/ProductCard';
 
-const Mujeres = () => {
+const Child = () => {
   const filtros = ["Marca", "Precio", "Color", "Talla", "Modelo", "Colaboraciones", "Usos"];
   const productos = Array(8).fill({
     name: "Tenis Adidas Campus 00s",
@@ -14,7 +14,7 @@ const Mujeres = () => {
       
       {/* 1. TÍTULO ACTUALIZADO: Más grande, itálico y apretado como en la foto */}
       <h1 className="text-5xl md:text-[5rem] font-black mb-8 uppercase italic tracking-tighter text-black">
-        Mujeres
+        Niños
       </h1>
 
       {/* 2. FILTROS ACTUALIZADOS: Píldoras grises más estilizadas */}
@@ -45,4 +45,4 @@ const Mujeres = () => {
   );
 };
 
-export default Mujeres;
+export default Child;

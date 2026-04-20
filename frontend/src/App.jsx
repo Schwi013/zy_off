@@ -7,7 +7,7 @@ import AuthModal from './components/AuthModal';
 import Hombres from './pages/Hombres'; 
 import Destacados from './pages/Destacados'; 
 import Mujeres from './pages/Mujeres';
-import Niños from './pages/Niños';
+import Child from './pages/Child';
 
 
 function App() {
@@ -75,7 +75,7 @@ function App() {
           <Route path="/hombres" element={<Hombres/>} />
           <Route path="/destacados" element={<Destacados/>} />
           <Route path="/mujer" element={<Mujeres/>} />
-          <Route path="/ninos" element={<Niños/>} />
+          <Route path="/ninos" element={<Child/>} />
         </Routes>
 
         <footer className="bg-white border-t border-gray-200 py-12 mt-20">

@@ -11,21 +11,36 @@ const Hombres = () => {
 
   return (
     <main className="max-w-7xl mx-auto px-10 py-12">
-      <h1 className="text-4xl font-black mb-10 uppercase italic">Hombres</h1>
+      
+      {/* 1. TÍTULO ACTUALIZADO: Más grande, itálico y apretado como en la foto */}
+      <h1 className="text-5xl md:text-[5rem] font-black mb-8 uppercase italic tracking-tighter text-black">
+        Hombres
+      </h1>
 
-      <div className="flex flex-wrap gap-3 mb-16">
+      {/* 2. FILTROS ACTUALIZADOS: Píldoras grises más estilizadas */}
+      <div className="flex flex-wrap gap-4 mb-16">
         {filtros.map(f => (
-          <button key={f} className="px-6 py-2 bg-[#f0f0f0] rounded-full text-[10px] font-bold uppercase hover:bg-gray-200 transition-colors">
+          <button 
+            key={f} 
+            className="px-6 py-2.5 bg-[#f4f4f4] rounded-full text-[11px] font-black uppercase tracking-wider text-gray-800 hover:bg-gray-200 hover:text-blue-700 transition-colors"
+          >
             {f}
           </button>
         ))}
       </div>
 
+      {/* GRID DE PRODUCTOS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-16">
         {productos.map((shoe, index) => (
-          <ProductCard key={index} shoeName={shoe.name} brand={shoe.brand} price={shoe.price} />
+          <ProductCard 
+            key={index} 
+            shoeName={shoe.name} 
+            brand={shoe.brand} 
+            price={shoe.price} 
+          />
         ))}
       </div>
+      
     </main>
   );
 };
