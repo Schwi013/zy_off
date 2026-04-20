@@ -80,7 +80,7 @@ function App() {
 
         <footer className="bg-white border-t border-gray-200 py-12 mt-20">
            <div className="max-w-7xl mx-auto px-6 text-center text-gray-400 text-xs">
-             <p>© 2026 Zapateria - Ricardo Ortega y Bryam</p>
+             <p>© 2026 Zapateria Zy_Off - Ricardo Ortega y Bryam</p>
            </div>
         </footer>
       </div>
