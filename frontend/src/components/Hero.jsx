@@ -1,4 +1,58 @@
-return (
+import React, { useState, useEffect } from 'react'; // 1. Importamos useEffect
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+const discounts = [
+  {
+    id: 1,
+    textLarge: "40%",
+    textSmall: "De Descuento",
+    image: "https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=1000",
+    gradient: "from-red-950 via-red-900 to-black"
+  },
+  {
+    id: 2,
+    textLarge: "30%",
+    textSmall: "En Tenis Nike Jordan",
+    image: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=1000",
+    gradient: "from-blue-950 via-slate-900 to-black"
+  },
+  {
+    id: 3,
+    textLarge: "MSI",
+    textSmall: "Hasta 12 Meses sin Intereses",
+    image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=1000",
+    gradient: "from-green-950 via-emerald-900 to-black"
+  }
+];
+
+const Hero = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev === discounts.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev === 0 ? discounts.length - 1 : prev - 1));
+  };
+
+  // 2. LÓGICA DEL TEMPORIZADOR AUTOMÁTICO
+  useEffect(() => {
+    // Definimos el intervalo (4000ms = 4 segundos)
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 4000);
+
+    // IMPORTANTE: Función de limpieza (Cleanup)
+    // Esto evita que se creen múltiples temporizadores si el usuario hace clic rápido
+    // o si el componente se desmonta.
+    return () => clearInterval(interval);
+
+  }, [currentSlide]); // Se reinicia el reloj cada vez que cambia el slide
+
+  const { textLarge, textSmall, image, gradient } = discounts[currentSlide];
+
+  return (
     <div className="w-full relative group">
       {/* Cambio: Usamos h-[60vh] para que tome el 60% del alto de la pantalla, en lugar de pixeles fijos */}
       <div className={`w-full bg-black flex flex-col md:flex-row h-[70vh] md:h-[60vh] min-h-[450px] overflow-hidden transition-all duration-500 ease-out`}>
@@ -45,3 +99,6 @@ return (
       </div>
     </div>
   );
+};
+
+export default Hero;
