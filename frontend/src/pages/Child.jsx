@@ -14,7 +14,7 @@ const Child = () => {
       
       {/* 1. TÍTULO ACTUALIZADO: Más grande, itálico y apretado como en la foto */}
       <h1 className="text-4xl md:text-6xl lg:text-[5rem] font-black mb-6 md:mb-8 uppercase italic tracking-tighter text-black">
-        Ninos
+        Niños
       </h1>
 
       {/* 2. FILTROS ACTUALIZADOS: Píldoras grises más estilizadas */}
