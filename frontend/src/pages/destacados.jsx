@@ -11,7 +11,9 @@ const Destacados = () => {
 
   return (
     <main className="max-w-7xl mx-auto px-10 py-12">
-      <h1 className="text-4xl font-black mb-10 uppercase italic">Destacados</h1>
+      <h1 className="text-4xl md:text-6xl lg:text-[5rem] font-black mb-6 md:mb-8 uppercase italic tracking-tighter text-black">
+        Destacados
+      </h1>
 
       <div className="flex flex-wrap gap-3 mb-16">
         {filtros.map(f => (

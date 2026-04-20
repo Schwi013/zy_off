@@ -51,9 +51,9 @@ const AuthModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-8}">
-      {/* 1. Ancho equilibrado a 400px y más redondeado */}
-      <div className="bg-white w-full max-w-[600px] rounded-3xl p-10 relative shadow-2xl">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center p-4 md:p-8">
+      {/* Añadimos mx-4 para margen en móvil, y ajustamos el padding (p-6 en móvil, p-10 en desktop) */}
+      <div className="bg-white w-full max-w-[600px] rounded-3xl p-6 md:p-10 relative shadow-2xl mx-4 max-h-[90vh] overflow-y-auto">
         
         <button onClick={onClose} className="absolute top-6 right-6 text-gray-400 hover:text-black transition-colors">
           <X size={22} />

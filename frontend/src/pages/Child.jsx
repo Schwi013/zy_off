@@ -13,8 +13,8 @@ const Child = () => {
     <main className="max-w-7xl mx-auto px-10 py-12">
       
       {/* 1. TÍTULO ACTUALIZADO: Más grande, itálico y apretado como en la foto */}
-      <h1 className="text-5xl md:text-[2rem] font-black mb-8 uppercase italic tracking-tighter text-black">
-        Niños
+      <h1 className="text-4xl md:text-6xl lg:text-[5rem] font-black mb-6 md:mb-8 uppercase italic tracking-tighter text-black">
+        Ninños
       </h1>
 
       {/* 2. FILTROS ACTUALIZADOS: Píldoras grises más estilizadas */}
