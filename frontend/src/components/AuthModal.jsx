@@ -19,7 +19,35 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Tu lógica de fetch aquí...
+    const endpoint = isLogin ? "/login" : "/usuarios";
+    
+    try {
+      const response = await fetch(`http://localhost:8000${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        if (isLogin) {
+          localStorage.setItem('token', data.access_token);
+          alert("¡Login Exitoso! Bienvenido a ZY OFF");
+          onClose(); // Cerramos la ventana
+        } else {
+          alert("¡Cuenta creada exitosamente! Por favor inicia sesión.");
+          setIsLogin(true); // Cambiamos a la pestaña de login
+          // Limpiamos el formulario
+          setFormData({ name: '', last_name: '', email: '', password: '' });
+        }
+      } else {
+        alert(data.detail || "Error en la operación");
+      }
+    } catch (error) {
+      console.error("Error de conexión:", error);
+      alert("Error: Verifica que tu servidor Backend (FastAPI) esté encendido.");
+    }
   };
 
   return (
