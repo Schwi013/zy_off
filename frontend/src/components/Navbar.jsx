@@ -104,12 +104,13 @@ const Navbar = ({ onOpenAuth }) => {
         }
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-10 h-[60px] flex items-center justify-between">
+      {/* ESTE ES EL CONTENEDOR DE LA NAV */}
+      <div className="max-w-7xl mx-auto px-6 md:px-10 h-[100px] flex items-center justify-between">
         
         {/* LOGO */}
         <div className="flex-none flex items-center">
           <Link to="/" className="cursor-pointer" onClick={() => { setActiveMenu(null); setShowSearch(false); setShowMobileMenu(false); }}>
-            <img src={LogoZoff} alt="Logo Z-OFF" className="w-20 md:w-24 object-contain" />
+            <img src={LogoZoff} alt="Logo Z-OFF" className="w-20 md:w-20 object-contain" />
           </Link>
         </div>
 
@@ -130,7 +131,8 @@ const Navbar = ({ onOpenAuth }) => {
               />
             </form>
           ) : (
-            <div className="flex gap-8 lg:gap-10 text-xs lg:text-sm font-black uppercase tracking-widest text-gray-900 h-full">
+            /* Configuracion de las categorias */
+            <div className="flex gap-8 lg:gap-24 text-xs lg:text-sm font-black uppercase tracking-widest text-gray-900 h-full">
               {['mujer', 'hombres', 'ninos'].map((ruta) => (
                 <div 
                   key={ruta}
@@ -154,7 +156,7 @@ const Navbar = ({ onOpenAuth }) => {
         </div>
 
         {/* === ICONOS DERECHA === */}
-        <div className="flex-none flex items-center justify-end gap-5 md:gap-7 text-gray-800">
+        <div className="flex-none flex items-center justify-end gap-5 md:gap-6 text-gray-800">
           
           {/* LUPA: Con onMouseEnter para PC y onClick para Móvil */}
           <button 
