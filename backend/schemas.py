@@ -33,3 +33,10 @@ class ProductResponse(EsquemaBase):
 class UserLogin(BaseModel):
     email: str
     password: str
+
+class CatalogoResponse(EsquemaBase):
+    id_variant: int
+    name_product: str
+    brand_name: str
+    price: float
+    image_url: str

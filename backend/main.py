@@ -1,5 +1,8 @@
 from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session 
+from sqlalchemy import func 
 from typing import List
 import redis
 import json
@@ -7,8 +10,7 @@ from database import engine, Base, SessionLocal
 import models as models 
 import schemas as schemas
 from security import verify_password, create_access_token, verify_token, get_password_hash
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi.middleware.cors import CORSMiddleware
+
 
 
 Base.metadata.create_all(bind=engine)
@@ -100,10 +102,60 @@ def ver_carrito(id_user: str):
 
 
 
-@app.get("/productos", response_model=List[schemas.ProductResponse])
-def obtener_productos(db: Session = Depends(get_db)):
-    productos = db.query(models.Product).all()
-    return productos 
+@app.get("/productos", response_model=dict)
+def obtener_productos(
+    gender: str = None,
+    brand: str = None,
+    color: str = None,
+    size: float = None,
+    category: str = None,
+    page: int = 1,
+    limit: int = 60,
+    db: Session = Depends(get_db)
+):
+    query = db.query(
+        models.ProductVariant.id_product_variant.label("id_variant"),
+        models.Product.name_product,
+        models.Brand.name.label("brand_name"),
+        models.Product.base_price.label("price"),
+        models.ProductVariant.image_front.label("image_url")
+    ).select_from(models.ProductVariant)\
+    .join(models.Product, models.ProductVariant.id_product == models.Product.id_product)\
+    .join(models.Brand, models.Product.id_brand == models.Brand.id_brand)
+
+    if gender: 
+        query = query.filter(models.Product.gender == gender)
+
+    if brand: 
+        query = query.filter(models.Brand.name == brand)
+
+    if color:
+        query = query.filter(models.ProductVariant.name_color.ilike(f"{color}"))
+
+    if size:
+        query = query.join(models.ProductSku, models.ProductVariant.id_product_variant == models.ProductSku.id_product_variant)\
+                    .filter(models.ProductSku.size == size, models.ProductSku.stock > 0)
+        
+    if category:
+        query = query.join(models.ProductCategory, models.Product.id_product == models.ProductCategory.id_product)\
+                    .join(models.Category, models.ProductCategory.id_category == models.Category.id_category)\
+                    .filter(models.Category.name == category)
+        
+    query = query.distinct()
+
+    total_items = query.count()
+    total_pages = (total_items + limit - 1) // limit if total_items > 0 else 1 
+    offset = (page - 1 ) * limit 
+
+    productos = query.offset(offset).limit(limit).all()
+    items = [schemas.CatalogoResponse.model_validate(p) for p in productos]
+
+    return {
+        "total": total_items,
+        "pages": total_pages,
+        "page": page,
+        "items": items
+    }
 
 @app.post("/login")
 def login(credenciales: schemas.UserLogin, db: Session = Depends(get_db)):
