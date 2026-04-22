@@ -3,11 +3,14 @@ import ProductCard from '../components/ProductCard';
 
 const Child = () => {
   const filtros = ["Marca", "Precio", "Color", "Talla", "Modelo", "Colaboraciones", "Usos"];
-  const productos = Array(8).fill({
-    name: "Tenis Adidas Campus 00s",
+  
+  // SOLUCIÓN: Usamos Array.from para crear 8 productos, pero dándole a cada uno un ID único
+  const productos = Array.from({ length: 8 }, (_, index) => ({
+    id: `ninos-${index + 1}`, // Esto creará "ninos-1", "ninos-2", etc.
+    name: "Tenis Adidas Campus 00s niño",
     brand: "Adidas",
     price: "2,000.00"
-  });
+  }));
 
   return (
     <main className="max-w-7xl mx-auto px-10 py-12">
@@ -31,9 +34,10 @@ const Child = () => {
 
       {/* GRID DE PRODUCTOS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-16">
-        {productos.map((shoe, index) => (
+        {productos.map((shoe) => (
           <ProductCard 
-            key={index} 
+            key={shoe.id} 
+            id={shoe.id}       // <-- ¡AQUÍ ESTÁ LA MAGIA! Le pasamos el ID único al carrito
             shoeName={shoe.name} 
             brand={shoe.brand} 
             price={shoe.price} 

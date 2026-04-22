@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import LogoZoff from '../assets/logo.png'; 
 import { Search, ShoppingBag, Heart, User, Menu, LogOut, ChevronRight, X } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 const Navbar = ({ onOpenAuth }) => {
   // === ESTADOS DE INTERFAZ ===
@@ -9,6 +10,7 @@ const Navbar = ({ onOpenAuth }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false); // Nuevo estado para el menú de celular
+  const { cartCount } = useCart(); // Traemos la cantidad total
   
   // === ESTADOS DE AUTENTICACIÓN Y RESPONSIVE ===
   const [isLogged, setIsLogged] = useState(false);
@@ -110,7 +112,7 @@ const Navbar = ({ onOpenAuth }) => {
         {/* LOGO */}
         <div className="flex-none flex items-center">
           <Link to="/" className="cursor-pointer" onClick={() => { setActiveMenu(null); setShowSearch(false); setShowMobileMenu(false); }}>
-            <img src={LogoZoff} alt="Logo Z-OFF" className="w-20 md:w-20 object-contain" />
+            <img src={LogoZoff} alt="Logo Z-OFF" className="w-20 md:w-25 object-contain" />
           </Link>
         </div>
 
@@ -169,10 +171,11 @@ const Navbar = ({ onOpenAuth }) => {
           
           <Heart size={iconSize} className="cursor-pointer hover:scale-110 transition-transform hidden md:block" />
           
-          <div className="relative cursor-pointer group">
-            <ShoppingBag size={iconSize} className="group-hover:scale-110 transition-transform" />
-            <span className="absolute -top-1 -right-1 bg-black text-white text-[8px] w-3.5 h-3.5 md:w-4 md:h-4 rounded-full flex items-center justify-center font-black">0</span>
-          </div>
+          <Link to="/carrito" className="relative cursor-pointer group flex items-center">
+          <ShoppingBag size={iconSize} className="group-hover:scale-110 transition-transform" />
+           {/* El contador ahora es dinámico */}
+          <span className="absolute -top-1 -right-1 bg-black text-white text-[8px] w-3.5 h-3.5 md:w-4 md:h-4 rounded-full flex items-center justify-center font-black animate-in fade-in zoom-in duration-300"> {cartCount} </span>
+    </Link>
 
           <div className="relative">
             <User size={iconSize} className="cursor-pointer hover:scale-110 transition-transform text-gray-800" onClick={handleUserClick} />
@@ -184,7 +187,8 @@ const Navbar = ({ onOpenAuth }) => {
                 </div>
                 <div className="flex flex-col py-2">
                   <Link to="/perfil" className="px-5 py-3 text-xs font-bold text-gray-600 hover:text-red-600 flex justify-between items-center">Mi Perfil <ChevronRight size={14}/></Link>
-                  <Link to="/pedidos" className="px-5 py-3 text-xs font-bold text-gray-600 hover:text-red-600 flex justify-between items-center">Mis Pedidos <ChevronRight size={14}/></Link>
+                  {/* Cambio para carrito  */}
+                  <Link to="/pedidos" onClick={() => setShowUserMenu(false)} className="px-5 py-3 text-xs font-bold text-gray-600 hover:text-red-600 flex justify-between items-center">Mis Pedidos <ChevronRight size={14}/> </Link>
                 </div>
                 <button onClick={handleLogout} className="w-full text-left px-5 py-4 text-xs font-black uppercase tracking-widest text-red-600 hover:bg-red-600 hover:text-white flex items-center gap-3 transition-all border-t border-gray-100">
                   <LogOut size={16} /> Cerrar Sesión
