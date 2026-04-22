@@ -8,6 +8,7 @@ import Hombres from './pages/Hombres';
 import Destacados from './pages/Destacados'; 
 import Mujeres from './pages/Mujeres';
 import Child from './pages/Child';
+import Perfil from './pages/Perfil';
 
 
 function App() {
@@ -76,6 +77,7 @@ function App() {
           <Route path="/destacados" element={<Destacados/>} />
           <Route path="/mujer" element={<Mujeres/>} />
           <Route path="/ninos" element={<Child/>} />
+          <Route path="/perfil" element={<Perfil/>} />
         </Routes>
 
         <footer className="bg-white border-t border-gray-200 py-12 mt-20">
