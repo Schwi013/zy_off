@@ -122,8 +122,9 @@ const AuthModal = ({ isOpen, onClose }) => {
             placeholder="Contraseña" 
             required
             className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-red-600 transition-colors text-sm"
-          />
-
+          />{
+          
+          }
           {/* 4. Botón con más "punch" */}
           <button type="submit" className="w-full bg-red-600 text-white py-4 rounded-xl font-black uppercase text-xs tracking-[0.2em] hover:bg-black transition-all duration-300 mt-4 shadow-lg shadow-red-200">
             {isLogin ? 'Entrar' : 'Crear Cuenta'}

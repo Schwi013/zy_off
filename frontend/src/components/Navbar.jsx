@@ -183,8 +183,8 @@ const Navbar = ({ onOpenAuth }) => {
                   <p className="text-sm font-black text-gray-900 mt-1 truncate">Hola, {userName || 'Cargando...'}</p>
                 </div>
                 <div className="flex flex-col py-2">
-                  <a href="#" className="px-5 py-3 text-xs font-bold text-gray-600 hover:text-red-600 flex justify-between items-center">Mi Perfil <ChevronRight size={14}/></a>
-                  <a href="#" className="px-5 py-3 text-xs font-bold text-gray-600 hover:text-red-600 flex justify-between items-center">Mis Pedidos <ChevronRight size={14}/></a>
+                  <Link to="/perfil" className="px-5 py-3 text-xs font-bold text-gray-600 hover:text-red-600 flex justify-between items-center">Mi Perfil <ChevronRight size={14}/></Link>
+                  <Link to="/pedidos" className="px-5 py-3 text-xs font-bold text-gray-600 hover:text-red-600 flex justify-between items-center">Mis Pedidos <ChevronRight size={14}/></Link>
                 </div>
                 <button onClick={handleLogout} className="w-full text-left px-5 py-4 text-xs font-black uppercase tracking-widest text-red-600 hover:bg-red-600 hover:text-white flex items-center gap-3 transition-all border-t border-gray-100">
                   <LogOut size={16} /> Cerrar Sesión
