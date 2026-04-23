@@ -40,7 +40,17 @@ class Category(Base):
     slug = Column(String(60), unique=True, nullable=False)
 
 # ==========================================
-# 4. TABLA: addresses (Direcciones - Soft Delete)
+# 4. TABLA: uses (Usos del calzado)
+# ==========================================
+class Use(Base):
+    __tablename__ = "uses"
+
+    id_use = Column(SmallInteger, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+    slug = Column(String(60), unique=True, nullable=False)
+
+# ==========================================
+# 5. TABLA: addresses (Direcciones - Soft Delete)
 # ==========================================
 class Address(Base):
     __tablename__ = "addresses"
@@ -60,7 +70,7 @@ class Address(Base):
     is_active = Column(Boolean, default=True, nullable=False) 
 
 # ==========================================
-# 5. TABLA: products (Modelo General)
+# 6. TABLA: products (Modelo General)
 # ==========================================
 class Product(Base):
     __tablename__ = "products"
@@ -69,16 +79,16 @@ class Product(Base):
     id_brand = Column(SmallInteger, ForeignKey("brands.id_brand"), nullable=False)
     name_product = Column(String(100), nullable=False)
     description = Column(Text, nullable=False)
-    gender = Column(String(10), nullable=False)
+    gender = Column(String(15), nullable=False)
     base_price = Column(Numeric(10, 2), nullable=False)
 
     __table_args__ = (
-        CheckConstraint("gender IN ('Hombre', 'Mujer', 'Unisex')", name="check_gender_valid"),
+        CheckConstraint("gender IN ('Hombre', 'Mujer', 'Unisex', 'Niño', 'Niña', 'Niño Unisex')", name="check_gender_valid"),
         CheckConstraint("base_price >= 0", name="check_base_price_positive"),
     )
 
 # ==========================================
-# 6. TABLA: product_variant (Colores / Tendencias)
+# 7. TABLA: product_variant (Colores / Tendencias)
 # ==========================================
 class ProductVariant(Base):
     __tablename__ = "product_variant"
@@ -91,6 +101,7 @@ class ProductVariant(Base):
     image_side = Column(String(255), nullable=True)
     image_other_side = Column(String(255), nullable=True)
     name_color = Column(String(50), nullable=False)
+    hex_color = Column(String(7), nullable=True)
     promotional_price = Column(Numeric(10, 2), nullable=True)
     views_count = Column(Integer, default=0, nullable=False)
     search_tags = Column(String(255), nullable=True)
@@ -100,7 +111,7 @@ class ProductVariant(Base):
     )
 
 # ==========================================
-# 7. TABLA: product_sku (Inventario Físico)
+# 8. TABLA: product_sku (Inventario Físico)
 # ==========================================
 class ProductSku(Base):
     __tablename__ = "product_sku"
@@ -116,7 +127,7 @@ class ProductSku(Base):
     )
 
 # ==========================================
-# 8. TABLA: orders (Cabecera del Pedido)
+# 9. TABLA: orders (Cabecera del Pedido)
 # ==========================================
 class Order(Base):
     __tablename__ = "orders"
@@ -134,7 +145,7 @@ class Order(Base):
     )
 
 # ==========================================
-# 9. TABLA: order_items (Detalle inmutable)
+# 10. TABLA: order_items (Detalle inmutable)
 # ==========================================
 class OrderItem(Base):
     __tablename__ = "order_items"
@@ -150,7 +161,7 @@ class OrderItem(Base):
     )
 
 # ==========================================
-# 10. TABLA: reviews (Calificaciones)
+# 11. TABLA: reviews (Calificaciones)
 # ==========================================
 class Review(Base):
     __tablename__ = "reviews"
@@ -167,7 +178,7 @@ class Review(Base):
     )
 
 # ==========================================
-# 11 y 12. TABLAS INTERMEDIAS Y AISLADAS
+# 11, 12 y 13. TABLAS INTERMEDIAS Y AISLADAS
 # ==========================================
 class Favorite(Base):
     __tablename__ = "favorites"
@@ -178,6 +189,11 @@ class Favorite(Base):
 class ProductCategory(Base):
     __tablename__ = "product_categories"
     id_category = Column(SmallInteger, ForeignKey("categories.id_category"), primary_key=True)
+    id_product = Column(Integer, ForeignKey("products.id_product"), primary_key=True)
+
+class ProductUse(Base):
+    __tablename__ = "product_uses"
+    id_use = Column(SmallInteger, ForeignKey("uses.id_use"), primary_key=True)
     id_product = Column(Integer, ForeignKey("products.id_product"), primary_key=True)
 
 class SearchAnalytics(Base):

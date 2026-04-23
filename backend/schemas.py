@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from uuid import UUID
 from datetime import datetime
 
-# Modelo de entrada: lo que el frontend nos envia 
 class UserCreate(BaseModel):
     name: str
     last_name: str
@@ -13,7 +12,6 @@ class EsquemaBase(BaseModel):
     class Config:
         from_attributes = True
 
-# Modelo de salida: lo que el backend responde
 class UserResponse(EsquemaBase):
     id_user: UUID
     name: str
@@ -22,7 +20,6 @@ class UserResponse(EsquemaBase):
     is_admin: bool
     is_verified: bool
     created_at: datetime
-
 
 class ProductResponse(EsquemaBase):
     id_product: int

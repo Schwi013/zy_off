@@ -109,6 +109,8 @@ def obtener_productos(
     color: str = None,
     size: float = None,
     category: str = None,
+    uso: str = None,
+    max_price: float = None,
     page: int = 1,
     limit: int = 60,
     db: Session = Depends(get_db)
@@ -124,7 +126,8 @@ def obtener_productos(
     .join(models.Brand, models.Product.id_brand == models.Brand.id_brand)
 
     if gender: 
-        query = query.filter(models.Product.gender == gender)
+        generos_lista = [g.strip() for g in gender.split(',')]
+        query = query.filter(models.Product.gender.in_(generos_lista))
 
     if brand: 
         query = query.filter(models.Brand.name == brand)
@@ -141,6 +144,14 @@ def obtener_productos(
                     .join(models.Category, models.ProductCategory.id_category == models.Category.id_category)\
                     .filter(models.Category.name == category)
         
+    if uso:
+        query = query.join(models.ProductUse, models.Product.id_product == models.ProductUse.id_product)\
+                    .join(models.Use, models.ProductUse.id_use == models.Use.id_use)\
+                    .filter(models.Use.name == uso)
+        
+    if max_price:
+        query = query.filter(models.Product.base_price <= max_price)
+        
     query = query.distinct()
 
     total_items = query.count()
@@ -156,6 +167,65 @@ def obtener_productos(
         "page": page,
         "items": items
     }
+
+@app.get("/filtros-disponibles")
+def obtener_filtros(gender: str, db: Session = Depends(get_db)):
+    generos_lista = [g.strip() for g in gender.split(',')]
+    # 1. Marcas Disponibles
+    marcas = db.query(models.Brand.name)\
+        .select_from(models.Brand)\
+        .join(models.Product, models.Brand.id_brand == models.Product.id_brand)\
+        .filter(models.Product.gender.in_(generos_lista))\
+        .distinct().all()
+    
+    # 2. Colores Disponibles
+    colores_query = db.query(models.ProductVariant.name_color, models.ProductVariant.hex_color)\
+        .select_from(models.ProductVariant)\
+        .join(models.Product, models.ProductVariant.id_product == models.Product.id_product)\
+        .filter(models.Product.gender.in_(generos_lista))\
+        .distinct().all()
+
+    # 3. Categorías Disponibles
+    categorias = db.query(models.Category.name)\
+        .select_from(models.Category)\
+        .join(models.ProductCategory, models.Category.id_category == models.ProductCategory.id_category)\
+        .join(models.Product, models.ProductCategory.id_product == models.Product.id_product)\
+        .filter(models.Product.gender.in_(generos_lista))\
+        .distinct().all()
+
+    # 4. Usos Disponibles
+    usos = db.query(models.Use.name)\
+        .select_from(models.Use)\
+        .join(models.ProductUse, models.Use.id_use == models.ProductUse.id_use)\
+        .join(models.Product, models.ProductUse.id_product == models.Product.id_product)\
+        .filter(models.Product.gender.in_(generos_lista))\
+        .distinct().all()
+
+    # 5. Rango de Tallas Real (Solo con stock)
+    tallas_stats = db.query(func.min(models.ProductSku.size), func.max(models.ProductSku.size))\
+        .select_from(models.ProductSku)\
+        .join(models.ProductVariant, models.ProductSku.id_product_variant == models.ProductVariant.id_product_variant)\
+        .join(models.Product, models.ProductVariant.id_product == models.Product.id_product)\
+        .filter(models.Product.gender.in_(generos_lista), models.ProductSku.stock > 0)\
+        .first()
+
+    # 6. Rango de Precios Real
+    precios_stats = db.query(func.min(models.Product.base_price), func.max(models.Product.base_price))\
+        .select_from(models.Product)\
+        .filter(models.Product.gender.in_(generos_lista))\
+        .first()
+
+    return {
+        "marcas": [m[0] for m in marcas if m[0]],
+        "colores": [{"nombre": c[0], "hex": c[1]} for c in colores_query if c[0]],
+        "categorias": [c[0] for c in categorias if c[0]],
+        "usos": [u[0] for u in usos if u[0]],
+        "talla_min": float(tallas_stats[0]) if tallas_stats and tallas_stats[0] else 22,
+        "talla_max": float(tallas_stats[1]) if tallas_stats and tallas_stats[1] else 32,
+        "precio_min": float(precios_stats[0]) if precios_stats and precios_stats[0] else 0,
+        "precio_max": float(precios_stats[1]) if precios_stats and precios_stats[1] else 5000
+    }
+
 
 @app.post("/login")
 def login(credenciales: schemas.UserLogin, db: Session = Depends(get_db)):
