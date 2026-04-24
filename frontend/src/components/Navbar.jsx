@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import LogoZoff from '../assets/logo.png'; 
 import { Search, ShoppingBag, Heart, User, Menu, LogOut, ChevronRight, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useFavorites } from '../context/FavoritesContext';
 
 const Navbar = ({ onOpenAuth }) => {
   // === ESTADOS DE INTERFAZ ===
@@ -11,6 +12,7 @@ const Navbar = ({ onOpenAuth }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false); // Nuevo estado para el menú de celular
   const { cartCount } = useCart(); // Traemos la cantidad total
+  const { favorites } = useFavorites();
   
   // === ESTADOS DE AUTENTICACIÓN Y RESPONSIVE ===
   const [isLogged, setIsLogged] = useState(false);
@@ -169,13 +171,16 @@ const Navbar = ({ onOpenAuth }) => {
             <Search size={iconSize} className={`cursor-pointer hover:scale-110 transition-transform ${showSearch ? 'text-red-600' : 'text-gray-800'}`} />
           </button>
           
-          <Heart size={iconSize} className="cursor-pointer hover:scale-110 transition-transform hidden md:block" />
+          {/*FAVORITOS */}
+         <Link to="/favoritos" className="relative group"> <Heart  size={iconSize} className="cursor-pointer hover:scale-110 transition-transform hidden md:block text-black hover:text-red-500"   />
+           {/* Burbuja del contador: Solo se muestra si hay favoritos */} {favorites.length > 0 && (<span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-black w-4 h-4 flex items-center justify-center rounded-full border border-white"> {favorites.length}</span>
+          )}</Link>
           
-          <Link to="/carrito" className="relative cursor-pointer group flex items-center">
-          <ShoppingBag size={iconSize} className="group-hover:scale-110 transition-transform" />
+            {/*CARRITO*/}
+          <Link to="/carrito" className="relative cursor-pointer group flex items-center"><ShoppingBag size={iconSize} className="group-hover:scale-110 transition-transform" />
            {/* El contador ahora es dinámico */}
           <span className="absolute -top-1 -right-1 bg-black text-white text-[8px] w-3.5 h-3.5 md:w-4 md:h-4 rounded-full flex items-center justify-center font-black animate-in fade-in zoom-in duration-300"> {cartCount} </span>
-    </Link>
+           </Link>
 
           <div className="relative">
             <User size={iconSize} className="cursor-pointer hover:scale-110 transition-transform text-gray-800" onClick={handleUserClick} />

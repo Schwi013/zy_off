@@ -12,6 +12,8 @@ import Perfil from './pages/Perfil';
 import Carrito from './pages/Carrito';
 import Pedidos from './pages/Pedidos';
 import { CartProvider } from './context/CartContext';
+import { FavoritesProvider } from './context/FavoritesContext';
+import Favorites from './pages/Favorites';
 
 function App() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -61,6 +63,7 @@ function App() {
   );
 
   return (
+    <FavoritesProvider>
     <CartProvider>
       <Router>
         <div className="min-h-screen bg-white font-sans">
@@ -74,6 +77,7 @@ function App() {
 
           <Routes>
             <Route path="/" element={<HomePage/>} />
+            <Route path="/favoritos" element={<Favorites />} />
             <Route path="/hombres" element={<Hombres/>} />
             <Route path="/destacados" element={<Destacados/>} />
             <Route path="/mujer" element={<Mujeres/>} />
@@ -91,6 +95,7 @@ function App() {
         </div>
       </Router>
     </CartProvider>
+    </FavoritesProvider>
   );
 }
 

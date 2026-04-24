@@ -344,7 +344,7 @@ const Child = () => {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 md:gap-x-6 gap-y-12">
           {productos.map((shoe) => (
-            <ProductCard key={shoe.id_variant} shoeName={shoe.name_product} brand={shoe.brand_name} price={shoe.price} imageUrl={shoe.image_url} />
+            <ProductCard key={shoe.id_variant} id={String(shoe.id_variant)} shoeName={shoe.name_product} brand={shoe.brand_name} price={shoe.price} imageUrl={shoe.image_url} />
           ))}
         </div>
       )}

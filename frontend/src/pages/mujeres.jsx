@@ -3,7 +3,7 @@ import ProductCard from '../components/ProductCard';
 import { ChevronDown, ChevronUp, X, RotateCcw, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 
 const Mujeres = () => {
-  const genderTarget = "Mujer,Unisex"; 
+  const genderTarget = "Mujer, Unisex"; 
   const displaytittle = ["Mujeres"];
   
   const [productos, setProductos] = useState([]);
@@ -344,7 +344,7 @@ const Mujeres = () => {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 md:gap-x-6 gap-y-12">
           {productos.map((shoe) => (
-            <ProductCard key={shoe.id_variant} shoeName={shoe.name_product} brand={shoe.brand_name} price={shoe.price} imageUrl={shoe.image_url} />
+            <ProductCard key={shoe.id_variant} id={String(shoe.id_variant)} shoeName={shoe.name_product} brand={shoe.brand_name} price={shoe.price} imageUrl={shoe.image_url} />
           ))}
         </div>
       )}
@@ -371,4 +371,4 @@ const Mujeres = () => {
   );
 };
 
-export default Mujeres;
+export default Child;
