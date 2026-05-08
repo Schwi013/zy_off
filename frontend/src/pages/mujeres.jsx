@@ -79,13 +79,13 @@ const Mujeres = () => {
     cargarOpcionesFiltros();
   }, []);
 
-  // Cargar productos cuando cambie la página o un filtro
+  // Cargar productos cuando cambie la página o un filtro (Nota: El filtro de talla y precio se activa al soltar el slider, no al cambiar el valor)
   useEffect(() => {
     cargarProductos();
     window.scrollTo(0, 0);
   }, [paginaActual, filtros]);
 
-  // Cerrar dropdowns al hacer clic fuera de ellos (Escritorio)
+  // Cerrar dropdowns al hacer clic fuera de ellos (Escritorio) y al abrir otro dropdown  
   const node = useRef();
   useEffect(() => {
     const handleClickOutside = e => {
@@ -95,7 +95,7 @@ const Mujeres = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Manejadores de interacción
+  // Manejadores de interacción con los filtros (Escritorio: clic en opción, Móvil: al soltar el slider o seleccionar opción)
   const handleFiltroSelect = (key, value) => {
     setFiltros(prev => ({ ...prev, [key]: value }));
     setPaginaActual(1);
@@ -118,7 +118,7 @@ const Mujeres = () => {
     setShowMobileFilters(false);
   };
 
-  // Estilo dinámico para los botones de escritorio
+  // Estilo dinámico para los botones de escritorio (Activo: rojo, Inactivo: gris, Abierto pero sin selección: negro)
   const getButtonStyle = (key) => {
     if (filtros[key] !== '') return 'bg-red-600 text-white border-red-600 shadow-md shadow-red-200';
     if (openDropdown === key) return 'bg-black text-white border-black';
@@ -371,4 +371,4 @@ const Mujeres = () => {
   );
 };
 
-export default Child;
+export default Mujeres;

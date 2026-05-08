@@ -35,7 +35,7 @@ function App() {
           {recomendados.map(shoe => (
             <ProductCard 
               key={shoe.id} 
-              id={shoe.id} // <-- ¡CRÍTICO! Le pasamos el ID único a la tarjeta
+              id={shoe.id} // <--  Le pasé el ID único a la tarjeta - Ricardo
               shoeName={shoe.name} 
               brand={shoe.brand} 
               price={shoe.price} 
