@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProductCard from './components/ProductCard';
@@ -14,6 +14,10 @@ import Pedidos from './pages/Pedidos';
 import { CartProvider } from './context/CartContext';
 import { FavoritesProvider } from './context/FavoritesContext';
 import Favorites from './pages/Favorites';
+import SellerDashboard from './pages/Seller/SellerDashboard';
+import AddProduct from './pages/Seller/AddProduct';
+import Inventory from './pages/Seller/Inventory';
+import Reports from './pages/Seller/Reports';
 
 function App() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -62,37 +66,53 @@ function App() {
     </>
   );
 
-  return (
-    <FavoritesProvider>
-    <CartProvider>
-      <Router>
-        <div className="min-h-screen bg-white font-sans">
-          
-          <Navbar onOpenAuth={() => setIsAuthOpen(true)} />
-          
-          <AuthModal 
-            isOpen={isAuthOpen} 
-            onClose={() => setIsAuthOpen(false)} 
-          />
+  const AppContent = () => {
+    const location = useLocation();
+    const isSellerRoute = location.pathname.startsWith('/vendedor');
 
-          <Routes>
-            <Route path="/" element={<HomePage/>} />
-            <Route path="/favoritos" element={<Favorites />} />
-            <Route path="/hombres" element={<Hombres/>} />
-            <Route path="/destacados" element={<Destacados/>} />
-            <Route path="/mujer" element={<Mujeres/>} />
-            <Route path="/ninos" element={<Child/>} />
-            <Route path="/perfil" element={<Perfil/>} />
-            <Route path="/carrito" element={<Carrito/>} />
-            <Route path="/pedidos" element={<Pedidos/>} />
-          </Routes>
+    return (
+      <div className="min-h-screen bg-white font-sans">
+        
+        {!isSellerRoute && <Navbar onOpenAuth={() => setIsAuthOpen(true)} />}
+        
+        <AuthModal 
+          isOpen={isAuthOpen} 
+          onClose={() => setIsAuthOpen(false)} 
+        />
 
+        <Routes>
+          <Route path="/" element={<HomePage/>} />
+          <Route path="/favoritos" element={<Favorites />} />
+          <Route path="/hombres" element={<Hombres/>} />
+          <Route path="/destacados" element={<Destacados/>} />
+          <Route path="/mujer" element={<Mujeres/>} />
+          <Route path="/ninos" element={<Child/>} />
+          <Route path="/perfil" element={<Perfil/>} />
+          <Route path="/carrito" element={<Carrito/>} />
+          <Route path="/pedidos" element={<Pedidos/>} />
+          {/* Rutas de Vendedor */}
+          <Route path="/vendedor/dashboard" element={<SellerDashboard />} />
+          <Route path="/vendedor/nuevo-producto" element={<AddProduct />} />
+          <Route path="/vendedor/inventario" element={<Inventory />} />
+          <Route path="/vendedor/reportes" element={<Reports />} />
+        </Routes>
+
+        {!isSellerRoute && (
           <footer className="bg-white border-t border-gray-200 py-12 mt-20">
              <div className="max-w-7xl mx-auto px-6 text-center text-gray-400 text-xs">
                <p>© 2026 Zapateria Zy_Off - Ricardo Ortega y Bryam</p>
              </div>
           </footer>
-        </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <FavoritesProvider>
+    <CartProvider>
+      <Router>
+        <AppContent />
       </Router>
     </CartProvider>
     </FavoritesProvider>

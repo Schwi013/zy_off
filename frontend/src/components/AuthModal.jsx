@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import LogoZoff from '../assets/logo.png';
 
 const AuthModal = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
@@ -19,6 +21,21 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // INTERCEPTAR LOGIN DE VENDEDOR (SOLO FRONTEND)
+    if (isLogin && formData.email === 'vendedor@zyoff.com' && formData.password === 'ventas12345') {
+      // TODO: BACKEND - Validar rol de vendedor desde la base de datos en lugar de datos estáticos
+      alert("¡Bienvenido al Panel de Vendedor!");
+      onClose();
+      navigate('/vendedor/dashboard');
+      return;
+    }
+
+    if (isLogin && formData.email === 'vendedor@zyoff.com') {
+      alert("Contraseña de vendedor incorrecta.");
+      return;
+    }
+
     const endpoint = isLogin ? "/login" : "/usuarios";
     
     try {
