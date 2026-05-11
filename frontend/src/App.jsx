@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -24,11 +24,29 @@ function App() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   // 1. IDs ÚNICOS PARA LA PÁGINA DE INICIO (home-1, home-2, etc.)
-  const recomendados = [
+  const [recomendados, setRecomendados] = useState([
     { id: "home-1", name: "Tenis Adidas Campus 00s", brand: "Adidas", price: "2,000.00" },
     { id: "home-2", name: "Tenis Nike Dunk High", brand: "Nike", price: "2,499.00" },
-    { id: "home-3", name: "Tenis Jordan 1 Retro Low", brand: "Jordan", price: "3,100.00" }, // Le cambié el nombre a este para que se note la diferencia
-  ];
+    { id: "home-3", name: "Tenis Jordan 1 Retro Low", brand: "Jordan", price: "3,100.00" },
+  ]);
+
+  /*
+  // TODO: BACKEND - LECTURA DE PRODUCTOS RECIENTES (Descomentar al conectar)
+  // useEffect(() => {
+  //   const fetchRecentProducts = async () => {
+  //     try {
+  //       const response = await fetch('http://localhost:8000/api/productos/recientes');
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         setRecomendados(data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching recent products", error);
+  //     }
+  //   };
+  //   fetchRecentProducts();
+  // }, []);
+  */
 
   const HomePage = () => (
     <>

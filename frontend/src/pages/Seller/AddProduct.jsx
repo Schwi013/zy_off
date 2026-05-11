@@ -20,9 +20,23 @@ const AddProduct = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     console.log("Datos del producto a guardar:", formData);
-    alert("¡Producto añadido exitosamente! (Simulación Frontend)");
-    navigate('/vendedor/dashboard');
+    
+    setTimeout(() => {
+      /*
+      // TODO: BACKEND - GUARDAR PRODUCTO EN BASE DE DATOS (Descomentar al conectar)
+      // fetch(`http://localhost:8000/api/productos`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(formData)
+      // });
+      */
+
+      alert('¡Producto guardado exitosamente!');
+      setIsSubmitting(false);
+      navigate('/vendedor/dashboard');
+    }, 1000);
   };
 
   const handleLogout = () => {

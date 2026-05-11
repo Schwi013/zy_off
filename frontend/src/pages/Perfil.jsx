@@ -93,6 +93,16 @@ const Perfil = () => {
             last_name: data.last_name,
             email: data.email
           });
+          
+          /*
+          // TODO: BACKEND - LECTURA DE DIRECCIONES (Descomentar al conectar)
+          // Asumiendo que el endpoint /perfil devuelve las direcciones o existe un /api/direcciones
+          const addrResponse = await fetch(`http://localhost:8000/api/direcciones/${data.email}`);
+          if (addrResponse.ok) {
+            const addrData = await addrResponse.json();
+            setDirecciones(addrData);
+          }
+          */
         } else {
           // Si el backend falla, usamos datos simulados para que no saque al usuario en un bucle
           console.warn("El backend falló, usando datos simulados.");
@@ -145,23 +155,19 @@ const Perfil = () => {
     // Por ahora, solo lo guardamos en el estado local de React
     setDirecciones([...direcciones, addressForm]);
     
-    /* // === CÓDIGO REAL PARA CUANDO ESTÉ LISTO TU BACKEND ===
-    const token = localStorage.getItem('token');
-    try {
-      const response = await fetch('http://localhost:8000/direcciones', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(addressForm)
-      });
-      if (response.ok) {
-         setDirecciones([...direcciones, addressForm]);
-      }
-    } catch (error) {
-      console.error("Error guardando dirección", error);
-    }
+    /* 
+    // TODO: BACKEND - GUARDAR DIRECCIÓN (Descomentar al conectar)
+    // const email = localStorage.getItem('currentUser') || 'guest';
+    // try {
+    //   const response = await fetch(`http://localhost:8000/api/direcciones/${email}`, {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify([...direcciones, addressForm])
+    //   });
+    //   if (!response.ok) throw new Error("Error al guardar");
+    // } catch (error) {
+    //   console.error("Error guardando dirección", error);
+    // }
     */
 
     // Limpiamos el formulario y cerramos la vista de añadir

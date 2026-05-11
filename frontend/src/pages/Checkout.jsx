@@ -110,6 +110,15 @@ const Checkout = () => {
 
       localStorage.setItem(ordersKey, JSON.stringify([newOrder, ...savedOrders]));
 
+      /*
+      // TODO: BACKEND - GUARDAR NUEVO PEDIDO EN REDIS/DB (Descomentar al conectar)
+      // fetch(`http://localhost:8000/api/pedidos/${currentUser}`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(newOrder)
+      // });
+      */
+
       alert("¡Pago procesado exitosamente! Tu pedido está en preparación.");
       clearCart();
       navigate('/pedidos'); // Redirigir a mis pedidos en vez del inicio

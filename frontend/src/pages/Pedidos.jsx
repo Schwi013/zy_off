@@ -20,6 +20,22 @@ const Pedidos = () => {
     if (savedOrders) {
       setOrders(JSON.parse(savedOrders));
     }
+
+    /*
+    // TODO: BACKEND - LECTURA DE PEDIDOS (Descomentar al conectar)
+    // const fetchOrders = async () => {
+    //   try {
+    //     const response = await fetch(`http://localhost:8000/api/pedidos/${currentUser}`);
+    //     if (response.ok) {
+    //       const data = await response.json();
+    //       setOrders(data);
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching orders", error);
+    //   }
+    // };
+    // fetchOrders();
+    */
   }, [navigate]);
 
   if (orders.length === 0) {
