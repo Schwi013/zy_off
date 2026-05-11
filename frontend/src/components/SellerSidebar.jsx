@@ -8,8 +8,9 @@ const SellerSidebar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    localStorage.removeItem('currentUser');
     alert("Sesión de vendedor cerrada.");
-    navigate('/');
+    window.location.href = '/';
   };
 
   const navItems = [

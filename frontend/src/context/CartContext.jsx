@@ -1,9 +1,18 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+  const getUserKey = () => `zyoff_cart_${localStorage.getItem('currentUser') || 'guest'}`;
+
+  const [cartItems, setCartItems] = useState(() => {
+    const saved = localStorage.getItem(getUserKey());
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem(getUserKey(), JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const addToCart = (product) => {
     // Verificamos si el producto ya está en la bolsa para solo sumar cantidad

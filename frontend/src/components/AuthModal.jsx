@@ -25,9 +25,10 @@ const AuthModal = ({ isOpen, onClose }) => {
     // INTERCEPTAR LOGIN DE VENDEDOR (SOLO FRONTEND)
     if (isLogin && formData.email === 'vendedor@zyoff.com' && formData.password === 'ventas12345') {
       // TODO: BACKEND - Validar rol de vendedor desde la base de datos en lugar de datos estáticos
+      localStorage.setItem('currentUser', 'vendedor@zyoff.com');
       alert("¡Bienvenido al Panel de Vendedor!");
       onClose();
-      navigate('/vendedor/dashboard');
+      window.location.href = '/vendedor/dashboard';
       return;
     }
 
@@ -50,8 +51,10 @@ const AuthModal = ({ isOpen, onClose }) => {
       if (response.ok) {
         if (isLogin) {
           localStorage.setItem('token', data.access_token);
+          localStorage.setItem('currentUser', formData.email);
           alert("¡Login Exitoso! Bienvenido a ZY OFF");
           onClose(); // Cerramos la ventana
+          window.location.reload(); // Recargar para inicializar los contextos de la cuenta
         } else {
           alert("¡Cuenta creada exitosamente! Por favor inicia sesión.");
           setIsLogin(true); // Cambiamos a la pestaña de login

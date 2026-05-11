@@ -3,14 +3,16 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const FavoritesContext = createContext();
 
 export const FavoritesProvider = ({ children }) => {
+  const getUserKey = () => `zyoff_favorites_${localStorage.getItem('currentUser') || 'guest'}`;
+
   // Cargamos favoritos iniciales del localStorage para que no se borren al recargar
   const [favorites, setFavorites] = useState(() => {
-    const saved = localStorage.getItem('zyoff_favorites');
+    const saved = localStorage.getItem(getUserKey());
     return saved ? JSON.parse(saved) : [];
   });
 
   useEffect(() => {
-    localStorage.setItem('zyoff_favorites', JSON.stringify(favorites));
+    localStorage.setItem(getUserKey(), JSON.stringify(favorites));
   }, [favorites]);
 
   const toggleFavorite = (product) => {

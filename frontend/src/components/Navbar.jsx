@@ -83,9 +83,11 @@ const Navbar = ({ onOpenAuth }) => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('currentUser');
     setIsLogged(false);
     setUserName('');
     setShowUserMenu(false);
+    window.location.href = '/'; // Recargar para limpiar estados de contexto
   };
 
   const categoriasPopulares = {
