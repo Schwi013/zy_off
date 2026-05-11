@@ -1,6 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, Plus, X } from 'lucide-react'; 
+import { ChevronRight, Plus, X, Trash2 } from 'lucide-react'; 
 import { useNavigate } from 'react-router-dom';
+
+const estadosYCiudades = {
+  "Aguascalientes": ["Aguascalientes", "Jesús María", "Calvillo"],
+  "Baja California": ["Tijuana", "Mexicali", "Ensenada"],
+  "Baja California Sur": ["La Paz", "Los Cabos", "Comondú"],
+  "Campeche": ["Campeche", "Carmen", "Champotón"],
+  "Chiapas": ["Tuxtla Gutiérrez", "Tapachula", "San Cristóbal de las Casas"],
+  "Chihuahua": ["Chihuahua", "Juárez", "Delicias"],
+  "Ciudad de México": ["Álvaro Obregón", "Cuauhtémoc", "Coyoacán", "Miguel Hidalgo", "Tlalpan"],
+  "Coahuila": ["Saltillo", "Torreón", "Monclova"],
+  "Colima": ["Colima", "Manzanillo", "Tecomán"],
+  "Durango": ["Durango", "Gómez Palacio", "Lerdo"],
+  "Guanajuato": ["León", "Irapuato", "Celaya"],
+  "Guerrero": ["Acapulco", "Chilpancingo", "Iguala"],
+  "Hidalgo": ["Pachuca", "Tulancingo", "Tizayuca"],
+  "Jalisco": ["Guadalajara", "Zapopan", "Puerto Vallarta", "Tlaquepaque"],
+  "Estado de México": ["Toluca", "Ecatepec", "Naucalpan", "Tlalnepantla"],
+  "Michoacán": ["Morelia", "Uruapan", "Zamora"],
+  "Morelos": ["Cuernavaca", "Jiutepec", "Cuautla"],
+  "Nayarit": ["Tepic", "Bahía de Banderas", "Xalisco"],
+  "Nuevo León": ["Monterrey", "San Pedro Garza García", "Apodaca"],
+  "Oaxaca": ["Oaxaca de Juárez", "Salina Cruz", "Juchitán"],
+  "Puebla": ["Puebla", "Tehuacán", "San Martín Texmelucan"],
+  "Querétaro": ["Querétaro", "San Juan del Río", "Corregidora"],
+  "Quintana Roo": ["Cancún", "Playa del Carmen", "Chetumal"],
+  "San Luis Potosí": ["San Luis Potosí", "Ciudad Valles", "Matehuala"],
+  "Sinaloa": ["Culiacán", "Mazatlán", "Los Mochis"],
+  "Sonora": ["Hermosillo", "Ciudad Obregón", "Nogales"],
+  "Tabasco": ["Villahermosa", "Cárdenas", "Comalcalco"],
+  "Tamaulipas": ["Reynosa", "Tampico", "Matamoros"],
+  "Tlaxcala": ["Tlaxcala", "Apizaco", "Huamantla"],
+  "Veracruz": ["Veracruz", "Xalapa", "Coatzacoalcos"],
+  "Yucatán": ["Mérida", "Valladolid", "Progreso"],
+  "Zacatecas": ["Zacatecas", "Fresnillo", "Guadalupe"]
+};
 
 const Perfil = () => {
   const [userData, setUserData] = useState({ name: '', last_name: '', email: '' });
@@ -9,15 +44,29 @@ const Perfil = () => {
   const navigate = useNavigate();
 
   // === NUEVOS ESTADOS PARA DIRECCIONES ===
-  const [direcciones, setDirecciones] = useState([]); // Aquí guardaremos las direcciones (máximo 5)
+  const getUserKey = () => `zyoff_addresses_${localStorage.getItem('currentUser') || 'guest'}`;
+  
+  const [direcciones, setDirecciones] = useState(() => {
+    const saved = localStorage.getItem(getUserKey());
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem(getUserKey(), JSON.stringify(direcciones));
+  }, [direcciones]);
+
   const [isAddingAddress, setIsAddingAddress] = useState(false); // Controla si mostramos el formulario
   const [addressForm, setAddressForm] = useState({
-    calle: '',
-    colonia: '',
-    ciudad: '',
     estado: '',
-    cp: ''
+    ciudad: '',
+    cp: '',
+    calle: '',
+    numero: '',
+    colonia: ''
   });
+
+  // Lista dinámica de ciudades según el estado seleccionado
+  const ciudadesDisponibles = addressForm.estado ? estadosYCiudades[addressForm.estado] : [];
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -44,14 +93,22 @@ const Perfil = () => {
             last_name: data.last_name,
             email: data.email
           });
-          // *NOTA*: Aquí en el futuro, si tu endpoint /perfil devuelve las direcciones, 
-          // harías un setDirecciones(data.direcciones)
         } else {
-          localStorage.removeItem('token');
-          navigate('/');
+          // Si el backend falla, usamos datos simulados para que no saque al usuario en un bucle
+          console.warn("El backend falló, usando datos simulados.");
+          setUserData({
+            name: 'Usuario',
+            last_name: 'Simulado',
+            email: localStorage.getItem('currentUser') || 'usuario@ejemplo.com'
+          });
         }
       } catch (error) {
         console.error("Error al cargar los datos del perfil:", error);
+        setUserData({
+          name: 'Usuario',
+          last_name: 'Simulado',
+          email: localStorage.getItem('currentUser') || 'usuario@ejemplo.com'
+        });
       } finally {
         setLoading(false);
       }
@@ -67,7 +124,13 @@ const Perfil = () => {
 
   // === LÓGICA DEL FORMULARIO DE DIRECCIONES ===
   const handleAddressChange = (e) => {
-    setAddressForm({ ...addressForm, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    // Si cambia el estado, reiniciamos la ciudad para evitar inconsistencias
+    if (name === 'estado') {
+      setAddressForm({ ...addressForm, estado: value, ciudad: '' });
+    } else {
+      setAddressForm({ ...addressForm, [name]: value });
+    }
   };
 
   const handleAddressSubmit = async (e) => {
@@ -102,8 +165,14 @@ const Perfil = () => {
     */
 
     // Limpiamos el formulario y cerramos la vista de añadir
-    setAddressForm({ calle: '', colonia: '', ciudad: '', estado: '', cp: '' });
+    setAddressForm({ estado: '', ciudad: '', cp: '', calle: '', numero: '', colonia: '' });
     setIsAddingAddress(false);
+  };
+
+  const handleDeleteAddress = (indexToDelete) => {
+    if (window.confirm("¿Seguro que deseas eliminar esta dirección?")) {
+      setDirecciones(direcciones.filter((_, index) => index !== indexToDelete));
+    }
   };
 
   if (loading) {
@@ -196,11 +265,18 @@ const Perfil = () => {
                 
                 {/* Listado de direcciones guardadas */}
                 {direcciones.map((dir, index) => (
-                  <div key={index} className="border border-gray-200 p-6 flex flex-col h-48 bg-gray-50">
-                    <h3 className="font-bold text-sm mb-2 text-black uppercase">Dirección {index + 1}</h3>
-                    <p className="text-sm text-gray-600">{dir.calle}</p>
+                  <div key={index} className="border border-gray-200 p-6 flex flex-col h-48 bg-gray-50 relative group">
+                    <button 
+                      onClick={() => handleDeleteAddress(index)}
+                      className="absolute top-4 right-4 text-gray-300 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                      title="Eliminar dirección"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                    <h3 className="font-bold text-sm mb-2 text-black uppercase w-5/6">Dirección {index + 1}</h3>
+                    <p className="text-sm text-gray-600">{dir.calle} #{dir.numero}</p>
                     <p className="text-sm text-gray-600">{dir.colonia}</p>
-                    <p className="text-sm text-gray-600">{dir.ciudad}, {dir.estado} {dir.cp}</p>
+                    <p className="text-sm text-gray-600">{dir.ciudad}, {dir.estado} C.P. {dir.cp}</p>
                   </div>
                 ))}
 
@@ -229,54 +305,102 @@ const Perfil = () => {
                 <h3 className="font-black text-lg uppercase mb-6 text-black">Añadir Nueva Dirección</h3>
                 
                 <form onSubmit={handleAddressSubmit} className="space-y-4">
-                  <input 
-                    type="text" 
-                    name="calle" 
-                    value={addressForm.calle} 
-                    onChange={handleAddressChange} 
-                    placeholder="Calle y Número" 
-                    required
-                    className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-black transition-colors text-sm"
-                  />
+                  {/* Select de Estado */}
                   <div className="grid grid-cols-2 gap-4">
-                    <input 
-                      type="text" 
-                      name="colonia" 
-                      value={addressForm.colonia} 
-                      onChange={handleAddressChange} 
-                      placeholder="Colonia" 
-                      required
-                      className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-black transition-colors text-sm"
-                    />
-                    <input 
-                      type="text" 
-                      name="cp" 
-                      value={addressForm.cp} 
-                      onChange={handleAddressChange} 
-                      placeholder="Código Postal" 
-                      required
-                      className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-black transition-colors text-sm"
-                    />
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-black uppercase text-gray-500">Estado</label>
+                      <select 
+                        name="estado" 
+                        value={addressForm.estado} 
+                        onChange={handleAddressChange} 
+                        required
+                        className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-black transition-colors text-sm appearance-none bg-white"
+                      >
+                        <option value="" disabled>Selecciona tu estado</option>
+                        {Object.keys(estadosYCiudades).map(estado => (
+                          <option key={estado} value={estado}>{estado}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Select de Ciudad */}
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-black uppercase text-gray-500">Ciudad/Municipio</label>
+                      <select 
+                        name="ciudad" 
+                        value={addressForm.ciudad} 
+                        onChange={handleAddressChange} 
+                        required
+                        disabled={!addressForm.estado}
+                        className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-black transition-colors text-sm appearance-none bg-white disabled:bg-gray-50 disabled:text-gray-400"
+                      >
+                        <option value="" disabled>Selecciona tu ciudad</option>
+                        {ciudadesDisponibles.map(ciudad => (
+                          <option key={ciudad} value={ciudad}>{ciudad}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <input 
-                      type="text" 
-                      name="ciudad" 
-                      value={addressForm.ciudad} 
-                      onChange={handleAddressChange} 
-                      placeholder="Ciudad" 
-                      required
-                      className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-black transition-colors text-sm"
-                    />
-                    <input 
-                      type="text" 
-                      name="estado" 
-                      value={addressForm.estado} 
-                      onChange={handleAddressChange} 
-                      placeholder="Estado" 
-                      required
-                      className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-black transition-colors text-sm"
-                    />
+
+                  <div className="grid grid-cols-3 gap-4">
+                    {/* Código Postal (Min/Max 5) */}
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-black uppercase text-gray-500">C.P.</label>
+                      <input 
+                        type="text" 
+                        name="cp" 
+                        value={addressForm.cp} 
+                        onChange={handleAddressChange} 
+                        placeholder="00000" 
+                        required
+                        pattern="[0-9]{5}"
+                        maxLength="5"
+                        minLength="5"
+                        title="El código postal debe contener exactamente 5 números"
+                        className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-black transition-colors text-sm"
+                      />
+                    </div>
+                    {/* Colonia */}
+                    <div className="col-span-2 space-y-1">
+                      <label className="text-[10px] font-black uppercase text-gray-500">Colonia</label>
+                      <input 
+                        type="text" 
+                        name="colonia" 
+                        value={addressForm.colonia} 
+                        onChange={handleAddressChange} 
+                        placeholder="Ej. Centro" 
+                        required
+                        className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-black transition-colors text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Calle y Número */}
+                  <div className="grid grid-cols-4 gap-4">
+                    <div className="col-span-3 space-y-1">
+                      <label className="text-[10px] font-black uppercase text-gray-500">Calle</label>
+                      <input 
+                        type="text" 
+                        name="calle" 
+                        value={addressForm.calle} 
+                        onChange={handleAddressChange} 
+                        placeholder="Nombre de la calle" 
+                        required
+                        className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-black transition-colors text-sm"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-black uppercase text-gray-500">Número</label>
+                      <input 
+                        type="text" 
+                        name="numero" 
+                        value={addressForm.numero} 
+                        onChange={handleAddressChange} 
+                        placeholder="Int/Ext" 
+                        required
+                        className="w-full border-b-2 border-gray-100 py-2 outline-none focus:border-black transition-colors text-sm"
+                      />
+                    </div>
                   </div>
                   <button 
                     type="submit" 

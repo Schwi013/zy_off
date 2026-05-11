@@ -111,9 +111,9 @@ const Carrito = () => {
               <span className="font-black text-2xl text-red-600">${total.toLocaleString('es-MX')}.00</span>
             </div>
 
-            <button className="w-full bg-black text-white py-4 rounded-lg font-black uppercase tracking-widest text-xs flex justify-center items-center gap-2 hover:bg-red-600 transition-colors shadow-lg">
+            <Link to="/checkout" className="w-full bg-black text-white py-4 rounded-lg font-black uppercase tracking-widest text-xs flex justify-center items-center gap-2 hover:bg-red-600 transition-colors shadow-lg mt-8">
               Pasar por caja <ArrowRight size={18} />
-            </button>
+            </Link>
             
             <p className="text-[10px] text-gray-400 text-center mt-4 uppercase tracking-wider">
               Impuestos incluidos. El envío se calcula en la pantalla de pago.

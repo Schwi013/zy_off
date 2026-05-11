@@ -11,6 +11,7 @@ import Child from './pages/Child';
 import Perfil from './pages/Perfil';
 import Carrito from './pages/Carrito';
 import Pedidos from './pages/Pedidos';
+import Checkout from './pages/Checkout';
 import { CartProvider } from './context/CartContext';
 import { FavoritesProvider } from './context/FavoritesContext';
 import Favorites from './pages/Favorites';
@@ -89,6 +90,7 @@ function App() {
           <Route path="/ninos" element={<Child/>} />
           <Route path="/perfil" element={<Perfil/>} />
           <Route path="/carrito" element={<Carrito/>} />
+          <Route path="/checkout" element={<Checkout/>} />
           <Route path="/pedidos" element={<Pedidos/>} />
           {/* Rutas de Vendedor */}
           <Route path="/vendedor/dashboard" element={<SellerDashboard />} />

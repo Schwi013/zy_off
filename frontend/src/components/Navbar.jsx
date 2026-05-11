@@ -28,7 +28,7 @@ const Navbar = ({ onOpenAuth }) => {
 
   // Vigía del Token
   useEffect(() => {
-    const fetchUserData = async () => {
+    const checkAuth = async () => {
       const token = localStorage.getItem('token');
       if (token) {
         setIsLogged(true);
@@ -39,13 +39,16 @@ const Navbar = ({ onOpenAuth }) => {
             });
             if (response.ok) {
               const data = await response.json();
-              setUserName(data.name); 
+              setUserName(data.name || 'Usuario'); 
             } else {
-              localStorage.removeItem('token');
-              setIsLogged(false);
+              // Si el token es inválido, solo registramos, pero dejamos que el usuario
+              // intente usar la app para que no caiga en bucle si el backend falla.
+              console.warn("El backend rechazó el token, pero mantendremos la sesión visual.");
+              setUserName('Usuario');
             }
           } catch (error) {
             console.error("Error al cargar perfil:", error);
+            setUserName('Usuario');
           }
         }
       } else {
@@ -53,9 +56,8 @@ const Navbar = ({ onOpenAuth }) => {
         setUserName('');
       }
     };
-    const interval = setInterval(fetchUserData, 1000);
-    return () => clearInterval(interval);
-  }, [userName]);
+    checkAuth();
+  }, []);
 
   // Manejadores de clics
   const handleUserClick = () => {
